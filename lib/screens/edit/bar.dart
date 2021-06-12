@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
-
 import 'edit_screen.dart';
 
 class Bar extends StatelessWidget implements PreferredSizeWidget {
