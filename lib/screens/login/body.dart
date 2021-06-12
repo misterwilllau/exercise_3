@@ -35,16 +35,29 @@ class Body extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildTextField(
-            hint: 'Username', icon: Icons.people, onChanged: (value) => () {}),
+            hint: 'Username',
+            icon: Icons.people,
+            onChanged: (value) {
+              _state.login = value;
+            }),
         _buildTextField(
             hint: 'Password',
-            isObsecure: false,
+            isObsecure: !_state.showPassword,
             icon: Icons.lock,
-            button: IconButton(icon: Icon(Icons.visibility), onPressed: () {}),
-            onChanged: (value) => () {}),
-        Text(
-          'Invalid username or password!',
-          style: TextStyle(color: Colors.red, fontSize: 20.0),
+            button: IconButton(
+                icon: Icon(Icons.visibility),
+                onPressed: () {
+                  _state.showPassword = !_state.showPassword;
+                }),
+            onChanged: (value) {
+              _state.password = value;
+            }),
+        Visibility(
+          child: Text(
+            'Invalid username or password!',
+            style: TextStyle(color: Colors.red, fontSize: 20.0),
+          ),
+          visible: _state.showErrorMsg,
         ),
         SizedBox(height: 10.0),
         _buildButtons(context)
@@ -71,14 +84,32 @@ class Body extends StatelessWidget {
       children: [
         ElevatedButton(
           child: Text('Log in'),
-          onPressed: () {},
+          onPressed: () => onLoginPressed(context),
         ),
         SizedBox(width: 10.0),
         ElevatedButton(
           child: Text('Cancel'),
-          onPressed: () {},
+          onPressed: () => onCancelPressed(context),
         ),
       ],
     );
+  }
+
+  void onLoginPressed(BuildContext context) async {
+    final User user = await UserService.getUserByLoginAndPassword(
+      login: _state.login,
+      password: _state.password,
+    );
+
+    if (user == null) {
+      _state.showErrorMsg = true;
+    } else {
+      _state.showErrorMsg = false;
+      Navigator.pop(context, user);
+    }
+  }
+
+  void onCancelPressed(BuildContext context) {
+    Navigator.pop(context, null);
   }
 }

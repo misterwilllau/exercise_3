@@ -31,14 +31,18 @@ class EditScreen extends StatefulWidget {
 }
 
 class EditScreenState extends State<EditScreen> {
+  get data => widget.data;
+  get isEditing => widget.isEditing;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: SafeArea(
         child: Scaffold(
-          appBar: Bar(),
-          body: Body(),
+          // 1. Build the UI by composing from its components, i.e., Bar and Body.
+          appBar: Bar(state: this),
+          body: Body(state: this),
         ),
       ),
     );

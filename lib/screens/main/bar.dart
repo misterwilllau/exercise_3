@@ -16,6 +16,7 @@
 //-----------------------------------------------------------------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
+import 'package:exercise3/models/user.dart';
 
 import 'main_screen.dart';
 
@@ -29,16 +30,41 @@ class Bar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading:
-          CircleAvatar(backgroundImage: AssetImage('assets/unknown_user.png')),
+      leading: CircleAvatar(
+          backgroundImage: _state.user == null
+              ? AssetImage('assets/unknown_user.png')
+              : NetworkImage('${_state.user.photoUrl}')),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('My Todo List'),
-          Text('User name goes here', style: TextStyle(fontSize: 12.0)),
+          Text(_state.user == null ? 'User name goes here' : _state.user.name,
+              style: TextStyle(fontSize: 12.0)),
         ],
       ),
-      actions: [IconButton(icon: Icon(Icons.login), onPressed: () {})],
+      actions: [
+        IconButton(
+            icon: Icon(Icons.login),
+            onPressed: () {
+              if (_state.user == null) {
+                onLogin(context);
+              } else {
+                onLogout(context);
+              }
+            })
+      ],
     );
+  }
+
+  void onLogin(BuildContext context) async {
+    final _user = await Navigator.pushNamed(context, '/login');
+    if (_user != null) {
+      _state.user = _user;
+    }
+  }
+
+  void onLogout(BuildContext context) async {
+    _state.user = null;
+    await Navigator.pushNamed(context, '/');
   }
 }

@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------------------------------------------------------
 
 import 'package:flutter/material.dart';
-
 import 'edit_screen.dart';
 
 class Bar extends StatelessWidget implements PreferredSizeWidget {
@@ -19,7 +18,10 @@ class Bar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text('The title goes here'),
+      // a. The title bar will show accordingly: 'Edit a todo' or 'Add a new todo'
+      title: _state.isEditing == true
+          ? Text('Edit a todo')
+          : Text('Add a new todo'),
       leading: Container(),
       centerTitle: true,
     );
